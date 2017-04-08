@@ -1,5 +1,5 @@
 
-@if (!isset($data) || empty($data))
+@if (!isset($data))
 <div class="col-md-8 list-group">
   <h1>NOT FOUND</h1>
 </div>

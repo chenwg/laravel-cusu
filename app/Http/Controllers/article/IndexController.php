@@ -8,18 +8,20 @@ use App\Events\Pv;
 use Illuminate\Http\Request;
 final class IndexController extends Controller
 {
+    protected $art;
+    public function __construct(Article $art){
+        $this->art = $art;
+    }
     public function index(string $en='suibi'){
         $data = Article::where(['en'=>$en,'is_delete'=>0])->paginate(3);
-        return view('home/article/article',['title'=>'p','data'=>$data]);
+        return view('home/article/article',['title'=>config('title.titleArr.'.$en),'data'=>$data]);
     }
 
     public function detail(int $id=0){
-        $data = Article::join('article_info',function($join){
-                $join->on('article.id','=','article_info.aid');
-        })->where('article.id',$id)->first();
-        event(new Pv($data['id']));
-        return view('home/article/article',['title'=>'p','data'=>$data]);
+        $data = $this->art->getDetail($id);
+        event(new Pv($id));
+        return view('home/article/article',
+        ['title'=>$data['title'],'data'=>$data]);
     }
 
-    
 }
